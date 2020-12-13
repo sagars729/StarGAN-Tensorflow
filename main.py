@@ -48,6 +48,7 @@ def parse_args():
                         help='Directory name to save training logs')
     parser.add_argument('--sample_dir', type=str, default='samples',
                         help='Directory name to save the samples on training')
+    parser.add_argument("--load_step", type=int, default=-1, help="step to resume training from or use for testing")
 
     return check_args(parser.parse_args())
 
