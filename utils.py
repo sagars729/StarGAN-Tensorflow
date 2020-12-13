@@ -6,6 +6,7 @@ from scipy import misc
 import tensorflow as tf
 import tensorflow.contrib.slim as slim
 import random
+import imageio
 
 class ImageData:
 
@@ -72,7 +73,7 @@ class ImageData:
                 else :
                     label.append(0.0)
 
-            if i < 2000 :
+            if i < len(lines)*.1 :
                 self.test_dataset.append(filename)
                 self.test_dataset_label.append(label)
             else :
@@ -132,7 +133,7 @@ def merge(images, size):
 
 
 def imsave(images, size, path):
-    return scipy.misc.imsave(path, merge(images, size))
+    return imageio.imwrite(path, merge(images, size))
 
 def inverse_transform(images):
     return (images+1.)/2.
@@ -159,7 +160,7 @@ def create_labels(c_org, selected_attrs=None):
             hair_color_indices.append(i)
 
     c_trg_list = []
-
+    print(selected_attrs, len(c_org))
     for i in range(len(selected_attrs)):
         c_trg = c_org.copy()
 
