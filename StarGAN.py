@@ -10,6 +10,7 @@ class StarGAN(object) :
         self.model_name = 'StarGAN'
         self.sess = sess
         self.checkpoint_dir = args.checkpoint_dir
+        self.load_step = args.load_step
         self.sample_dir = args.sample_dir
         self.result_dir = args.result_dir
         self.log_dir = args.log_dir
@@ -276,7 +277,7 @@ class StarGAN(object) :
         tf.global_variables_initializer().run()
 
         # saver to save model
-        self.saver = tf.train.Saver()
+        self.saver = tf.train.Saver(max_to_keep=None)
 
         # summary writer
         self.writer = tf.summary.FileWriter(self.log_dir + '/' + self.model_dir, self.sess.graph)
@@ -373,6 +374,8 @@ class StarGAN(object) :
         ckpt = tf.train.get_checkpoint_state(checkpoint_dir)
         if ckpt and ckpt.model_checkpoint_path:
             ckpt_name = os.path.basename(ckpt.model_checkpoint_path)
+            if self.load_step > -1: ckpt_name = "StarGAN.model-%d" % (self.load_step)
+            print(ckpt_name)
             self.saver.restore(self.sess, os.path.join(checkpoint_dir, ckpt_name))
             counter = int(next(re.finditer("(\d+)(?!.*\d)", ckpt_name)).group(0))
             print(" [*] Success to read {}".format(ckpt_name))
